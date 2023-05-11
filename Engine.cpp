@@ -40,6 +40,7 @@ void Engine::input()
             {
                 int numPoints = rand() % 26 + 25;
                 Particle particle(m_Window, numPoints, { event.mouseButton.x, event.mouseButton.y });
+                this->m_particles.push_back(particle);
             }
         }
     }
