@@ -176,13 +176,12 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 
 void Particle::draw(RenderTarget& target, RenderStates states) const
 {
-    Color m_color;
     VertexArray lines(TriangleFan, m_numPoints + 1);
 
     Vector2f center = (Vector2f)target.mapCoordsToPixel(m_centerCoordinate);
 
-    center = lines[0].position;
-    m_color = lines[0].color;
+    lines[0].position = center;
+    lines[0].color = this->m_color1;
 
 
     for (int j = 1; j <= m_numPoints; j++) {
@@ -201,10 +200,10 @@ void Particle::update(float dt)
     rotate(dt * m_radiansPerSec);
     scale(SCALE);
 
-    float dx = m_vx * dt;
-    float dy = m_vy * dt - G * dt;
-
-    m_vy -= G * dt;
+    float dx, dy;
+    dx = vx * dt;
+    vy = vy - (G * dt);
+    dy = vy * dt;
 
     translate(dx, dy);
 }
@@ -212,7 +211,7 @@ void Particle::update(float dt)
 void Particle::translate(double xShift, double yShift)
 {
     TranslationMatrix T(xShift,yShift,m_A.getCols());
-    m_A = T * m_A;
+    m_A = T + m_A;
     m_centerCoordinate.x += xShift;
     m_centerCoordinate.y += yShift;
 }
